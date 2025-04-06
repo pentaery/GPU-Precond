@@ -1,6 +1,39 @@
 #include "mfem.hpp"
 #include <iomanip>
 
+void sortCSRRows(int m, int nnz, int *csrRowPtr, int *csrColInd,
+                 double *csrVal) {
+  // 遍历每一行
+  for (int row = 0; row < m; ++row) {
+    // 获取当前行的起始和结束位置
+    int start = csrRowPtr[row];
+    int end = csrRowPtr[row + 1];
+    int row_nnz = end - start; // 当前行的非零元素个数
+
+    if (row_nnz <= 1) {
+      // 如果行内元素少于 2 个，无需排序
+      continue;
+    }
+
+    // 将列索引和值绑定为 pair 进行排序
+    std::vector<std::pair<int, float>> row_pairs(row_nnz);
+    for (int i = start; i < end; ++i) {
+      row_pairs[i - start] = std::make_pair(csrColInd[i], csrVal[i]);
+    }
+
+    // 按列索引升序排序
+    std::sort(row_pairs.begin(), row_pairs.end(),
+              [](const std::pair<int, float> &a,
+                 const std::pair<int, float> &b) { return a.first < b.first; });
+
+    // 将排序后的结果写回原始数组
+    for (int i = start; i < end; ++i) {
+      csrColInd[i] = row_pairs[i - start].first;
+      csrVal[i] = row_pairs[i - start].second;
+    }
+  }
+}
+
 int main() {
 
   mfem::Device device("cuda");
@@ -68,6 +101,9 @@ int main() {
   const double *a_data = A.GetData(); // values
   int nnz = A.NumNonZeroElems();      // number of non-zero elements
   int nrows = A.Height();             // number of rows
+
+
+  sortCSRRows(nrows, nnz, A.GetI(), A.GetJ(), A.GetData());
 
   // Write CSR format: first line is "nrows nnz", then values, column indices,
   // row pointers

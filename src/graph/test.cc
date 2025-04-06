@@ -17,8 +17,6 @@ void checkCudaError(cudaError_t err, const char *msg) {
   }
 }
 
-
-
 int main(int argc, char *argv[]) {
 
   std::ifstream in("../../../data/A.txt");
@@ -73,7 +71,7 @@ int main(int argc, char *argv[]) {
 
   int offsets[] = {};
   int indices[] = {0, 1, 2, 3}; // 修正为 4 条边
-  float weights[163476] = {1};  
+  float weights[163476] = {1};
   for (int i = 0; i < 163476; i++) {
     weights[i] = 1;
   }
@@ -99,8 +97,8 @@ int main(int argc, char *argv[]) {
                             (num_vertices + 1) * sizeof(int),
                             cudaMemcpyHostToDevice),
                  "Failed to copy offsets");
-  checkCudaError(cudaMemcpy(d_indices, col_indices.data(), num_edges * sizeof(int),
-                            cudaMemcpyHostToDevice),
+  checkCudaError(cudaMemcpy(d_indices, col_indices.data(),
+                            num_edges * sizeof(int), cudaMemcpyHostToDevice),
                  "Failed to copy indices");
   checkCudaError(cudaMemcpy(d_weights, weights, num_edges * sizeof(float),
                             cudaMemcpyHostToDevice),
@@ -117,9 +115,9 @@ int main(int argc, char *argv[]) {
   // 设置聚类参数
   int n_clusters = 150;
   int n_eig_vects = 150;
-  float evs_tolerance = 0.001;
+  float evs_tolerance = 0.00001;
   int evs_max_iter = 1000;
-  float kmean_tolerance = 0.001;
+  float kmean_tolerance = 0.00001;
   int kmean_max_iter = 1000;
 
   // 调用谱聚类函数
@@ -139,14 +137,14 @@ int main(int argc, char *argv[]) {
   // 打印聚类结果到clustering.txt 每一行代表一个顶点的聚类标签
   std::ofstream out("clustering.txt");
   if (!out) {
-    std::cerr << "Error: Could not open clustering.txt for writing!" << std::endl;
+    std::cerr << "Error: Could not open clustering.txt for writing!"
+              << std::endl;
     return 1;
   }
   for (int i = 0; i < num_vertices; i++) {
     out << clustering[i] << std::endl;
   }
   out.close();
-  
 
   // 统计每个簇的大小
   int cluster_sizes[n_clusters];
