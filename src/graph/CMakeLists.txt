@@ -17,6 +17,7 @@ find_package(rmm REQUIRED)
 # 添加你的可执行文件
 add_executable(test
     test.cc
+    matCPU.cc
     )
 
 # 链接必要的库
@@ -27,6 +28,13 @@ target_link_libraries(test
     rmm::rmm
     CUDA::cudart
 )
+
+target_include_directories(test
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+
 
 # 添加包含目录
 # target_include_directories(your_executable

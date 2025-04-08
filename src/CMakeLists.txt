@@ -1,2 +1,2 @@
-add_subdirectory(matrixGen)
-# add_subdirectory(graph)
+# add_subdirectory(matrixGen)
+add_subdirectory(graph)

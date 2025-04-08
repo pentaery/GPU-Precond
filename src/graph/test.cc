@@ -5,10 +5,7 @@
 #include <raft/core/handle.hpp>
 #include <raft/random/rng_state.hpp>
 
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
+#include "matCPU.hh"
 
 void checkCudaError(cudaError_t err, const char *msg) {
   if (err != cudaSuccess) {
@@ -19,64 +16,23 @@ void checkCudaError(cudaError_t err, const char *msg) {
 
 int main(int argc, char *argv[]) {
 
-  std::ifstream in("../../../data/A.txt");
-  if (!in) {
-    std::cerr << "Error: Could not open A.txt for reading!" << std::endl;
-    return 1;
-  }
-
-  // 2. 读取第一行：行数和非零元素个数
   int nrows, nnz;
-  in >> nrows >> nnz;
-  in.ignore(); // 跳过换行符
+  std::vector<float> values(1);      // 值数组（使用 float 类型）
+  std::vector<int> col_indices(1);   // 列索引数组
+  std::vector<int> row_ptr(1); // 行指针数组（nrows + 1 个元素）
 
-  // 3. 分配存储空间
-  std::vector<float> values(nnz);      // 值数组（使用 float 类型）
-  std::vector<int> col_indices(nnz);   // 列索引数组
-  std::vector<int> row_ptr(nrows + 1); // 行指针数组（nrows + 1 个元素）
 
-  // 4. 读取值数组
-  std::string line;
-  std::getline(in, line); // 读取整行
-  std::istringstream iss_values(line);
+  readMat(&nrows, &nnz, row_ptr, col_indices, values);
+
+  std::cout << "nrows: " << nrows << std::endl;
+  std::cout << "nnz: " << nnz << std::endl;
+
+  float *weights = new float[nnz];
   for (int i = 0; i < nnz; i++) {
-    if (!(iss_values >> values[i])) {
-      std::cerr << "Error reading values at index " << i << std::endl;
-      return 1;
-    }
-  }
-
-  // 5. 读取列索引数组
-  std::getline(in, line);
-  std::istringstream iss_cols(line);
-  for (int i = 0; i < nnz; i++) {
-    if (!(iss_cols >> col_indices[i])) {
-      std::cerr << "Error reading column indices at index " << i << std::endl;
-      return 1;
-    }
-  }
-
-  // 6. 读取行指针数组
-  std::getline(in, line);
-  std::istringstream iss_rows(line);
-  for (int i = 0; i <= nrows; i++) {
-    if (!(iss_rows >> row_ptr[i])) {
-      std::cerr << "Error reading row pointers at index " << i << std::endl;
-      return 1;
-    }
-  }
-
-  // 7. 关闭文件
-  in.close();
-
-  int offsets[] = {};
-  int indices[] = {0, 1, 2, 3}; // 修正为 4 条边
-  float weights[163476] = {1};
-  for (int i = 0; i < 163476; i++) {
     weights[i] = 1;
   }
-  int num_vertices = 23526;
-  int num_edges = 163476; // 修正边数为 4
+  int num_vertices = nrows;
+  int num_edges = nnz;
 
   // 在设备上分配内存
   int *d_offsets, *d_indices;
