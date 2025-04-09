@@ -6,3 +6,6 @@
 
 int readMat(int *nrows, int *nnz, std::vector<int> &row_ptr,
             std::vector<int> &col_index, std::vector<float> &values);
+
+void matDecompose2LM(int *nrows, int *nnz, std::vector<int> &row_ptr,
+                      std::vector<int> &col_index, std::vector<float> &values);

@@ -34,6 +34,7 @@ target_include_directories(test
     ${CMAKE_SOURCE_DIR}/include
 )
 
+include_directories(BEFORE ${CUDA_INCLUDE_DIRS})
 
 
 # 添加包含目录
