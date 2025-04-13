@@ -1,5 +1,34 @@
 #include "matCPU.hh"
 
+
+// void processDataThrust(thrust::device_vector<int> &globalTolocal,
+//                        thrust::device_vector<int> &count,
+//                        thrust::device_vector<int> &part, int nvtxs,
+//                        int nparts) {
+//   // 1. 初始化 count 为 0
+//   thrust::fill(count.begin(), count.end(), 0);
+
+//   // 2. 创建临时数组存储每个顶点的计数（都为1）
+//   thrust::device_vector<int> ones(nvtxs);
+//   thrust::fill(ones.begin(), ones.end(), 1);
+
+//   // 3. 按 part 进行 reduce_by_key，计算每个分区的计数
+//   thrust::device_vector<int> temp_count(nparts);
+//   thrust::reduce_by_key(part.begin(), part.end(), ones.begin(),
+//                         thrust::discard_iterator<>(), temp_count.begin());
+
+//   // 4. 将 temp_count 拷贝到 count
+//   thrust::copy(temp_count.begin(), temp_count.end(), count.begin());
+
+//   // 5. 对每个分区内的元素进行前缀和，得到 local index
+//   thrust::device_vector<int> temp_indices(nvtxs);
+//   thrust::exclusive_scan_by_key(part.begin(), part.end(), ones.begin(),
+//                                 temp_indices.begin());
+
+//   // 6. 将结果写入 globalTolocal
+//   thrust::copy(temp_indices.begin(), temp_indices.end(), globalTolocal.begin());
+// }
+
 int readMat(int *nrows, int *nnz, std::vector<int> &row_ptr,
             std::vector<int> &col_index, std::vector<float> &values) {
   std::ifstream in("../../../data/A.txt");

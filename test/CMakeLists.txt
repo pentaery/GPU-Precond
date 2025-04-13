@@ -1,17 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+include_directories("/home/ET/yjzhou/HPCSoft/amgx/include")
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 查找 CUDA
-find_package(CUDA REQUIRED)
-if (CUDA_FOUND)
-    message("CUDA found: ${CUDA_VERSION}")
-    include_directories(${CUDA_INCLUDE_DIRS})
-endif()
+ADD_EXECUTABLE(test1 test.cc)
 
-# 添加可执行文件
-cuda_add_executable(my_project main.cu)
-
-# 链接 CUDA 库（如果需要）
-target_link_libraries(my_project ${CUDA_LIBRARIES})
+target_link_libraries(test1 "/home/ET/yjzhou/HPCSoft/amgx/build/libamgxsh.so")

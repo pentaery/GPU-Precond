@@ -39,7 +39,7 @@ int main() {
   mfem::Device device("cuda");
   device.Print(); // 打印设备信息
   // 1. Parse command line options.
-  std::string mesh_file = "../../../data/rect";
+  std::string mesh_file = "../../../data/test2.msh";
   int order = 1;
 
   mfem::OptionsParser args(0, 0);

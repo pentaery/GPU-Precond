@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
 
-# 设置C++标准
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 设置CUDA标准
+
 set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
@@ -40,9 +40,9 @@ endif()
 
 
 
-add_executable(test test.cc)
+add_executable(matgen test.cc)
 include_directories(${MFEM_INCLUDE_DIRS})
-target_link_libraries(test PRIVATE ${MFEM_LIBRARIES})
+target_link_libraries(matgen PRIVATE ${MFEM_LIBRARIES})
 
 
 
