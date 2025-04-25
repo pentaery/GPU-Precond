@@ -27,4 +27,4 @@ void processDataThrust(thrust::device_vector<int> &globalTolocal,
                        thrust::device_vector<int> &part, int nvtxs, int nparts);
 
 PetscErrorCode formAUX(std::vector<int> &row_ptr, std::vector<int> &col_index,
-             std::vector<float> &values, int nrows, int nnz);
+                       std::vector<float> &values, int nrows, int nnz);
