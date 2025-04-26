@@ -166,7 +166,8 @@ int main(int argc, char *argv[]) {
     PetscCheck(nconv >= eigennum, PETSC_COMM_SELF, PETSC_ERR_USER,
                "Not enough converged eigenvalues found!");
 
-    PetscCall(EPSGetEigenpair(eps, PetscInt, PetscScalar *, PetscScalar *, Vec, Vec));
+    PetscCall(EPSGetEigenpair(eps, 0, &eig_val, NULL, eig_vec, NULL));
+    std::cout << "Eigenvalue: " << eig_val << std::endl;
 
     PetscCall(MatDestroy(&Ai[i]));
     PetscCall(MatDestroy(&Si[i]));
