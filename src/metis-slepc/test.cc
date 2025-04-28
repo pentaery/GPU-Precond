@@ -274,9 +274,9 @@ int main(int argc, char *argv[]) {
   PetscCall(PCSetType(pcSmoother, PCBJACOBI));
   PetscCall(KSPSetErrorIfNotConverged(kspSmoother, PETSC_TRUE));
   // 设置Prolongation
-  // PetscCall(PCMGSetInterpolation(pc, 1, test2.Rc));
+  PetscCall(PCMGSetInterpolation(pc, 1, R));
   PetscCall(PCShellSetName(
-      pc, "3levels-MG-via-GMsFEM-with-velocity-elimination"));
+      pc, "2levels-MG-via-GMsFEM-with-velocity-elimination"));
 
   PetscCall(KSPSolve(ksp, rhs, x));
 
